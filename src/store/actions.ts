@@ -58,3 +58,13 @@ export const newPost = (title, body) => {
     dispatch(fetchAllPosts());
   };
 };
+
+export const deletePost = (id) => {
+  return async (dispatch) => {
+    await axios({
+      method: "DELETE",
+      url: `https://simple-blog-api.crew.red/posts/${id}`,
+    });
+    dispatch(fetchAllPosts());
+  };
+};

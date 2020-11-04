@@ -2,8 +2,14 @@ import React from "react";
 import Link, { LinkProps } from "next/link";
 import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
-import axios from "axios";
-import { PostContainerProps, PostPrps, PostType, StyleProps } from "../types";
+import {
+  PostContainerProps,
+  PostPrps,
+  LinkStyleProps,
+  StyleProps,
+} from "../types";
+import { useDispatch } from "react-redux";
+import { deletePost } from "../store/actions";
 
 const PostContainer = styled.div`
   margin: 20px auto;
@@ -24,7 +30,7 @@ const PostContainer = styled.div`
 const Title = styled.div`
   font-size: 2em;
   max-width: 80%;
-  ${(props: LinkProps) =>
+  ${(props: LinkStyleProps) =>
     props.link &&
     css`
       cursor: pointer;
@@ -66,7 +72,9 @@ const Button = styled.button`
 `;
 
 const Post = ({ post, singlePost = true }: PostPrps) => {
+  const dispatch = useDispatch();
   const router = useRouter();
+
   if (!post) {
     return null;
   }
@@ -75,12 +83,9 @@ const Post = ({ post, singlePost = true }: PostPrps) => {
     post.body = post.body.slice(0, 100) + "...";
   }
 
-  const deletePost = async () => {
+  const handleDeletePost = async () => {
     try {
-      await axios({
-        method: "DELETE",
-        url: `https://simple-blog-api.crew.red/posts/${post.id}`,
-      });
+      await dispatch(deletePost(post.id));
       router.push("/");
     } catch (error) {
       console.log(error);
@@ -102,7 +107,7 @@ const Post = ({ post, singlePost = true }: PostPrps) => {
           <Link href={router.asPath + "/edit"}>
             <Button edit>Edit</Button>
           </Link>
-          <Button delete onClick={deletePost}>
+          <Button delete onClick={handleDeletePost}>
             Delete
           </Button>
         </ButtonContainer>

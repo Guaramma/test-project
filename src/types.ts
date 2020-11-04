@@ -22,6 +22,6 @@ export interface PostContainerProps {
   singlePost: boolean;
 }
 
-export interface LinkProps {
+export interface LinkStyleProps {
   link?: boolean;
 }
